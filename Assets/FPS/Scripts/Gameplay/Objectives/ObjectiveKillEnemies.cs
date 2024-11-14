@@ -15,20 +15,13 @@ namespace Unity.FPS.Gameplay
         public int NotificationEnemiesRemainingThreshold = 3;
 
         int m_KillTotal;
+        bool Started = false; 
 
         protected override void Start()
         {
-            base.Start();
 
-            EventManager.AddListener<EnemyKillEvent>(OnEnemyKilled);
-
-            // set a title and description specific for this type of objective, if it hasn't one
-            if (string.IsNullOrEmpty(Title))
-                Title = "Eliminate " + (MustKillAllEnemies ? "all the" : KillsToCompleteObjective.ToString()) +
-                        " enemies";
-
-            if (string.IsNullOrEmpty(Description))
-                Description = GetUpdatedCounterAmount();
+           
+            
         }
 
         void OnEnemyKilled(EnemyKillEvent evt)
@@ -46,7 +39,8 @@ namespace Unity.FPS.Gameplay
             // update the objective text according to how many enemies remain to kill
             if (targetRemaining == 0)
             {
-                CompleteObjective(string.Empty, GetUpdatedCounterAmount(), "Objective complete : " + Title);
+                CompleteObjective(string.Empty, GetUpdatedCounterAmount(), "Objective complete : " + Title); 
+                EventManager.Broadcast(Events.AllObjectivesCompletedEvent); // ends the gam bacially 
             }
             else if (targetRemaining == 1)
             {
@@ -74,6 +68,27 @@ namespace Unity.FPS.Gameplay
         void OnDestroy()
         {
             EventManager.RemoveListener<EnemyKillEvent>(OnEnemyKilled);
+        }
+
+        public void StartQuest () // started from here so it starts from any other script so it doesnt auto start
+        {
+            if (!Started) // only starts once
+            {
+                Started = true; // this is taken from the start function of this script
+                base.Start();
+
+
+                EventManager.AddListener<EnemyKillEvent>(OnEnemyKilled);
+
+                // set a title and description specific for this type of objective, if it hasn't one
+                if (string.IsNullOrEmpty(Title))
+                    Title = "Eliminate " + (MustKillAllEnemies ? "all the" : KillsToCompleteObjective.ToString()) +
+                            " enemies";
+
+                if (string.IsNullOrEmpty(Description))
+                    Description = GetUpdatedCounterAmount();
+            }
+            
         }
     }
 }

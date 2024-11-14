@@ -5,7 +5,7 @@ namespace Unity.FPS.Game
 {
     public class ObjectiveManager : MonoBehaviour
     {
-        List<Objective> m_Objectives = new List<Objective>();
+       public static List<Objective> m_Objectives = new List<Objective>();// currently active quests
         bool m_ObjectivesCompleted = false;
 
         void Awake()
@@ -31,7 +31,7 @@ namespace Unity.FPS.Game
             }
 
             m_ObjectivesCompleted = true;
-            EventManager.Broadcast(Events.AllObjectivesCompletedEvent);
+            //EventManager.Broadcast(Events.AllObjectivesCompletedEvent); - it doesnt auto end it when no more quests are active
         }
 
         void OnDestroy()

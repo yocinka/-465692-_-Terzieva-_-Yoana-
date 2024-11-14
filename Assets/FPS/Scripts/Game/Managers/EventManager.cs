@@ -14,6 +14,7 @@ namespace Unity.FPS.Game
 
         static readonly Dictionary<Delegate, Action<GameEvent>> s_EventLookups =
             new Dictionary<Delegate, Action<GameEvent>>();
+        public static readonly object instance;
 
         public static void AddListener<T>(Action<T> evt) where T : GameEvent
         {
